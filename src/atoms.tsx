@@ -14,9 +14,12 @@ export interface IToDo {
   category: Categories;
 }
 
+let output = localStorage.getItem("todos");
+let localData = JSON.parse(output as any) || [];
+
 export const toDoState = atom<IToDo[]>({
   key: "toDo",
-  default: [],
+  default: localData,
 });
 
 export const categoryState = atom<Categories>({

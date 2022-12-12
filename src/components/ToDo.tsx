@@ -1,8 +1,9 @@
 import { Categories, IToDo, toDoState } from "../atoms";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 
 function ToDo({ text, category, id }: IToDo) {
-  const setToDos = useSetRecoilState(toDoState);
+  const [toDos, setToDos] = useRecoilState(toDoState);
+
   const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     const {
       currentTarget: { name },
@@ -18,11 +19,14 @@ function ToDo({ text, category, id }: IToDo) {
       console.log(oldToDo, newToDo);
 
       /**특정 인덱스 원소만 바꾸는 방법 */
-      return [
+      const newToDos = [
         ...oldToDos.slice(0, targetIndex),
         newToDo,
         ...oldToDos.slice(targetIndex + 1),
       ];
+      // console.log(newToDos);
+      localStorage.setItem("todos", JSON.stringify(toDos));
+      return newToDos;
     });
   };
 
