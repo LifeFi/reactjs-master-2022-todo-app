@@ -10,9 +10,19 @@ function ToDo({ text, category, id }: IToDo) {
     setToDos((oldToDos) => {
       const targetIndex = oldToDos.findIndex((toDo) => toDo.id === id);
       const oldToDo = oldToDos[targetIndex];
-      const newToDo = { text, id, category: name };
+      const newToDo = {
+        text,
+        id,
+        category: name as IToDo["category"],
+      }; /*또는 as any */
       console.log(oldToDo, newToDo);
-      return oldToDos;
+
+      /**특정 인덱스 원소만 바꾸는 방법 */
+      return [
+        ...oldToDos.slice(0, targetIndex),
+        newToDo,
+        ...oldToDos.slice(targetIndex + 1),
+      ];
     });
   };
 
