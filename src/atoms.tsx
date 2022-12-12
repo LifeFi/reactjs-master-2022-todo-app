@@ -20,7 +20,7 @@ export const toDoState = atom<IToDo[]>({
 });
 
 export const categoryState = atom<Categories>({
-  key: "categoty",
+  key: "category",
   default: Categories.TO_DO /**enum 사용시 실수를 줄일 수 있다. */,
 });
 
