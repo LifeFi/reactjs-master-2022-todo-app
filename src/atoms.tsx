@@ -1,4 +1,5 @@
 import { atom, selector } from "recoil";
+import { recoilPersist } from "recoil-persist";
 
 // type categories = "TO_DO" | "DOING" | "DONE";
 
@@ -14,12 +15,15 @@ export interface IToDo {
   category: Categories;
 }
 
-let output = localStorage.getItem("todos");
-let localData = JSON.parse(output as any) || [];
+const { persistAtom } = recoilPersist({
+  key: "recoil-persist-todos",
+  storage: localStorage,
+});
 
 export const toDoState = atom<IToDo[]>({
   key: "toDo",
-  default: localData,
+  default: [],
+  effects_UNSTABLE: [persistAtom],
 });
 
 export const categoryState = atom<Categories>({

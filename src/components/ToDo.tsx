@@ -1,8 +1,8 @@
 import { Categories, IToDo, toDoState } from "../atoms";
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 
 function ToDo({ text, category, id }: IToDo) {
-  const [toDos, setToDos] = useRecoilState(toDoState);
+  const setToDos = useSetRecoilState(toDoState);
 
   const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     const {
@@ -25,7 +25,6 @@ function ToDo({ text, category, id }: IToDo) {
         ...oldToDos.slice(targetIndex + 1),
       ];
       // console.log(newToDos);
-      localStorage.setItem("todos", JSON.stringify(toDos));
       return newToDos;
     });
   };
