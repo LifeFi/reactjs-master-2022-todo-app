@@ -3,20 +3,20 @@ import { recoilPersist } from "recoil-persist";
 
 // type categories = "TO_DO" | "DOING" | "DONE";
 
-export enum Categories {
-  "TO_DO" = "TO_DO",
-  "DOING" = "DOING",
-  "DONE" = "DONE",
-}
+// export enum Categories {
+//   "TO_DO" = "TO_DO",
+//   "DOING" = "DOING",
+//   "DONE" = "DONE",
+// }
 
 export interface IToDo {
   text: string;
   id: number;
-  category: Categories;
+  category: string;
 }
 
 const { persistAtom } = recoilPersist({
-  key: "recoil-persist-todos",
+  key: "recoil-persist-toDos",
   storage: localStorage,
 });
 
@@ -26,9 +26,15 @@ export const toDoState = atom<IToDo[]>({
   effects_UNSTABLE: [persistAtom],
 });
 
-export const categoryState = atom<Categories>({
+export const categoryState = atom<string>({
   key: "category",
-  default: Categories.TO_DO /**enum 사용시 실수를 줄일 수 있다. */,
+  default: "TO_DO",
+});
+
+export const categoriesState = atom<string[]>({
+  key: "categories",
+  default: ["TO_DO", "DOING", "DONE"],
+  effects_UNSTABLE: [persistAtom],
 });
 
 export const toDoSelector = selector({

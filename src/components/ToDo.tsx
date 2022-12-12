@@ -1,22 +1,22 @@
-import { Categories, IToDo, toDoState } from "../atoms";
-import { useSetRecoilState } from "recoil";
+import { categoriesState, IToDo, toDoState } from "../atoms";
+import { useSetRecoilState, useRecoilValue } from "recoil";
 
 function ToDo({ text, category, id }: IToDo) {
   const setToDos = useSetRecoilState(toDoState);
-
+  const categories = useRecoilValue(categoriesState);
   const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     const {
-      currentTarget: { name },
+      currentTarget: { value },
     } = event;
     setToDos((oldToDos) => {
       const targetIndex = oldToDos.findIndex((toDo) => toDo.id === id);
-      const oldToDo = oldToDos[targetIndex];
+      // const oldToDo = oldToDos[targetIndex];
       const newToDo = {
         text,
         id,
-        category: name as any,
-      }; /*또는 as any */
-      console.log(oldToDo, newToDo);
+        category: value,
+      };
+      // console.log(oldToDo, newToDo);
 
       /**특정 인덱스 원소만 바꾸는 방법 */
       const newToDos = [
@@ -29,24 +29,35 @@ function ToDo({ text, category, id }: IToDo) {
     });
   };
 
+  const deleteToDo = () => {
+    setToDos((oldToDos) => {
+      const targetIndex = oldToDos.findIndex((toDo) => toDo.id === id);
+
+      const newToDos = [
+        ...oldToDos.slice(0, targetIndex),
+        ...oldToDos.slice(targetIndex + 1),
+      ];
+      return newToDos;
+    });
+  };
+
   return (
     <li>
       <span>{text}</span>
-      {category !== Categories.DOING && (
-        <button name={Categories.DOING} onClick={onClick}>
-          Doing
+
+      {Object.values(categories).map((availableCategory) => (
+        <button
+          disabled={availableCategory === category}
+          key={availableCategory}
+          value={availableCategory}
+          onClick={onClick}
+        >
+          {availableCategory}
         </button>
-      )}
-      {category !== Categories.TO_DO && (
-        <button name={Categories.TO_DO} onClick={onClick}>
-          To Do
-        </button>
-      )}
-      {category !== Categories.DONE && (
-        <button name={Categories.DONE} onClick={onClick}>
-          Done
-        </button>
-      )}
+      ))}
+
+      <span> | </span>
+      <button onClick={deleteToDo}>DELETE</button>
     </li>
   );
 }

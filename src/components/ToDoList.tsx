@@ -1,27 +1,51 @@
 import React from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { categoryState, toDoSelector, Categories } from "../atoms";
+import { categoryState, toDoSelector, categoriesState } from "../atoms";
 import CreateToDo from "./CreateToDo";
 import ToDo from "./ToDo";
 
 function ToDoList() {
   const toDos = useRecoilValue(toDoSelector);
   const [category, setCategory] = useRecoilState(categoryState);
-  // console.log(toDos);
-  const onInput = (event: React.FormEvent<HTMLSelectElement>) => {
-    setCategory(event.currentTarget.value as any);
+  const [categories, setCategories] = useRecoilState(categoriesState);
+
+  const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setCategory(event.currentTarget.value);
+  };
+
+  const addCategory = () => {
+    const newCategory = prompt("Input new category name.", "");
+
+    if (newCategory) {
+      if (categories.includes(newCategory)) {
+        alert("Already exists same category name.");
+        return;
+      }
+      setCategories([...categories, newCategory]);
+      setCategory(newCategory);
+    }
   };
 
   return (
     <div>
-      <h1>To Dos</h1>
+      <h2>To-Do App</h2>
       <hr />
-
-      <select value={category} onInput={onInput}>
-        <option value={Categories.TO_DO}>To Do</option>
-        <option value={Categories.DOING}>Doing</option>
-        <option value={Categories.DONE}>Done</option>
-      </select>
+      {categories.map((availableCategory) => (
+        <span key={availableCategory}>
+          <button
+            value={availableCategory}
+            onClick={onClick}
+            disabled={availableCategory === category}
+          >
+            {availableCategory}
+          </button>
+        </span>
+      ))}
+      <span> | </span>
+      <span>
+        <button onClick={addCategory}>New Category</button>
+      </span>
+      <hr />
       <CreateToDo />
       {toDos?.map((toDo) => (
         <ToDo key={toDo.id} {...toDo} />
