@@ -26,19 +26,46 @@ function ToDoList() {
 */
 
 function ToDoList() {
-  const { register, watch } = useForm();
-  console.log(register("toDo"));
-  console.log(watch());
-
+  const { register, watch, handleSubmit, formState } = useForm();
+  const onValid = (data: any) => {
+    console.log(data);
+  };
+  // console.log(register("toDo"));
+  // console.log(watch());
+  console.log(formState.errors);
   return (
     <div>
-      <form>
-        <input {...register("email")} placeholder="Email" />
-        <input {...register("firstName")} placeholder="First Name" />
-        <input {...register("lastName")} placeholder="Last Name" />
-        <input {...register("username")} placeholder="Username" />
-        <input {...register("password")} placeholder="Password" />
-        <input {...register("password1")} placeholder="Password Confirmation" />
+      <form
+        style={{ display: "flex", flexDirection: "column" }}
+        onSubmit={handleSubmit(onValid)}
+      >
+        <input {...register("email", { required: true })} placeholder="Email" />
+        <input
+          {...register("firstName", { required: true })}
+          placeholder="First Name"
+        />
+        <input
+          {...register("lastName", { required: true })}
+          placeholder="Last Name"
+        />
+        <input
+          {...register("username", {
+            required: true,
+            minLength: { value: 10, message: "more 10" },
+          })}
+          placeholder="Username"
+        />
+        <input
+          {...register("password", { required: true, minLength: 6 })}
+          placeholder="Password"
+        />
+        <input
+          {...register("password1", {
+            required: "Password is required",
+            minLength: 6,
+          })}
+          placeholder="Password Confirmation"
+        />
 
         <button>Add</button>
       </form>
